@@ -1,89 +1,32 @@
 "use client";
-import { searchWithFilters } from "@/actions/actions";
+
+import { searchAppartmentstWithFilters } from "@/actions/actions";
 import { AppartmentDTO } from "@/models/models";
 import { BuildingOffice2Icon } from "@heroicons/react/24/outline";
-import { InformationCircleIcon } from "@heroicons/react/24/solid";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useOptimistic, useState } from "react";
+import { useState } from "react";
 import Toggle from "./toggle/Toggle";
 
-export default function Properties({
+export default function Appartments({
   serverProperties,
-  rules,
 }: {
   serverProperties: any;
-  rules: any;
 }) {
-  const router = useRouter();
-  const { data: session } = useSession();
-
-  console.log(session);
-
-  const [properties, setProperties] =
+  const [appartments, setAppartments] =
     useState<AppartmentDTO[]>(serverProperties);
-
-  const [hoveredPropId, setHoveredPropId] = useState<string>();
-  // const updateRule = (prop: PropertyDTO, ruleId: string) => {
-  //   startTransition(() => {
-  //     prop.queueRule = rules.find((r: QueueRuleDTO) => r.id == ruleId);
-  //     updateOptimisticProperty(prop);
-  //   });
-  //   updatePropertyRule(prop.id, ruleId).then((properties) => {
-  //     setProperties(properties);
-  //     startTransition(() => {
-  //       router.refresh();
-  //     });
-  //   });
-  // };
-
-  const [showInfo, setShowInfo] = useState(false);
-
-  const showInfoPopever = (propId: string) => {
-    setHoveredPropId(propId);
-    setShowInfo(!showInfo);
-    // let rect = e.currentTarget.getBoundingClientRect();
-    // let x = e.clientX - rect.left;
-    // let y = e.clientY - rect.top - 50;
-    // const top = Math.round(y);
-    // const left = Math.round(x);
-    // setCoordinate({ left, top });
-  };
-  const hideInfoPopever = () => {
-    setShowInfo(false);
-  };
-
-  const [optimisticProperties, updateOptimisticProperty] = useOptimistic(
-    properties,
-    (state, property: AppartmentDTO) => {
-      return state.map((p) => (p.id === property.id ? property : p));
-    }
-  );
-
-  const filters: string[] = [];
-  const updateFilters = (value: string | null) => {
-    if (value && filters.includes(value)) {
-      filters.splice(filters.indexOf(value), 1);
-    } else if (value) {
-      filters.push(value);
-    }
-    // console.log(filters);
-  };
 
   const handleSearch = async (formData: FormData) => {
     const searchString = formData.get("searchString") as string;
-    const res = await searchWithFilters(
+    const res = await searchAppartmentstWithFilters(
       searchString,
-      filters.includes("includeRules"),
-      filters.includes("includeAddress"),
-      filters.includes("includeHasAdvert"),
-      filters.includes("includeObjectNumber"),
-      filters.includes("includeLmNumber")
+      formData.get("includeRules") ? true : false,
+      formData.get("includeAddress") ? true : false,
+      formData.get("includeHasAdvert") ? true : false,
+      formData.get("includeObjectNumber") ? true : false,
+      formData.get("includeLmNumber") ? true : false
     );
 
-    // console.log(res);
-    setProperties(res);
+    setAppartments(res);
   };
 
   return (
@@ -108,39 +51,19 @@ export default function Properties({
           <div>
             <ul className="grid grid-cols-5">
               <li>
-                <Toggle
-                  label="Sökregel"
-                  value="includeRules"
-                  callback={(e) => updateFilters(e.target.value)}
-                />
+                <Toggle label="Köregel" value="includeRules" />
               </li>
               <li>
-                <Toggle
-                  label="Adress"
-                  value="includeAddress"
-                  callback={(e) => updateFilters(e.target.value)}
-                />
+                <Toggle label="Adress" value="includeAddress" />
               </li>
               <li>
-                <Toggle
-                  label="Objektnummer"
-                  value="includeObjectNumber"
-                  callback={(e) => updateFilters(e.target.value)}
-                />
+                <Toggle label="Objektnummer" value="includeObjectNumber" />
               </li>
               <li>
-                <Toggle
-                  label="LM nummer"
-                  value="includeLmNumber"
-                  callback={(e) => updateFilters(e.target.value)}
-                />
+                <Toggle label="LM nummer" value="includeLmNumber" />
               </li>
               <li>
-                <Toggle
-                  label="Annonserad"
-                  value="includeHasAdvert"
-                  callback={(e) => updateFilters(e.target.value)}
-                />
+                <Toggle label="Annonserad" value="includeHasAdvert" />
               </li>
             </ul>
           </div>
@@ -158,7 +81,7 @@ export default function Properties({
           </tr>
         </thead>
         <tbody>
-          {properties.map((property: AppartmentDTO) => {
+          {appartments.map((property: AppartmentDTO) => {
             return (
               <tr
                 key={property.id}
@@ -167,7 +90,7 @@ export default function Properties({
                 <td>{property.objectNumber}</td>
                 <td>{property.lmNumber}</td>
                 <td>{property.queueRule.name}</td>
-                <td>Annonserad</td>
+                <td>{property.totalApplications}</td>
                 <td>
                   <span key={property.address.id} className="truncate">
                     {property.address.street} {property.address.number}{" "}
@@ -177,24 +100,6 @@ export default function Properties({
                   </span>
                 </td>
                 <td className="text-right flex justify-end relative overflow-visible">
-                  {showInfo && hoveredPropId === property.id && (
-                    <div
-                      onClick={hideInfoPopever}
-                      className="text-white bg-black text-left p-2 w-[200px] z-50 rounded-lg"
-                      style={{
-                        position: "absolute",
-                      }}
-                    >
-                      Har utannonserad lägenhet
-                    </div>
-                  )}
-                  {property.advert && (
-                    <InformationCircleIcon
-                      className="w-6 hover:text-green-900"
-                      onClick={() => showInfoPopever(property.id)}
-                    />
-                  )}
-
                   <Link href={`/appartment/${property.id}`} className="">
                     <BuildingOffice2Icon className="w-6 hover:text-green-900" />
                   </Link>

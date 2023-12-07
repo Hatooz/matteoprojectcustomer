@@ -137,7 +137,7 @@ export const deleteAdvert = async (advertId: string) => {
   });
 };
 
-export const searchWithFilters = async (
+export const searchPropertiesWithFilters = async (
   searchString?: string,
   includeRules?: boolean,
   includeAddress?: boolean,
@@ -177,6 +177,46 @@ export const searchWithFilters = async (
     })
   ).json();
 };
+export const searchAppartmentstWithFilters = async (
+  searchString?: string,
+  includeRules?: boolean,
+  includeAddress?: boolean,
+  includeHasAdvert?: boolean,
+  includeObjectNumber?: boolean,
+  includeLmNumber?: boolean
+) => {
+  let queryString = `searchString=${searchString}`;
+
+  if (includeRules) {
+    queryString += `&includeRules=${includeRules}`;
+  }
+  if (includeAddress) {
+    queryString += `&includeAddress=${includeAddress}`;
+  }
+  if (includeObjectNumber) {
+    queryString += `&includeObjectNumber=${includeObjectNumber}`;
+  }
+  if (includeLmNumber) {
+    queryString += `&includeLmNumber=${includeLmNumber}`;
+  }
+  if (includeHasAdvert) {
+    queryString += `&includeHasAdvert=${includeHasAdvert}`;
+  }
+
+  if (!searchString) {
+    return await getAppartmentsWithAdvert();
+  }
+
+  return await (
+    await fetch(`http://localhost:5039/api/search/appartments?${queryString}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-cache",
+    })
+  ).json();
+};
 
 export const registerUser = async (email: string, password: string) => {
   return await (
@@ -200,5 +240,36 @@ export const getUser = async (email: string) => {
       },
       cache: "no-cache",
     })
+  ).json();
+};
+
+export const applyToAppartment = async (
+  userId: string,
+  appartmentId: string
+) => {
+  return await (
+    await fetch(`http://localhost:5039/api/application`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-cache",
+      body: JSON.stringify({ userId, appartmentId }),
+    })
+  ).json();
+};
+
+export const getApplicationsByAppartmentId = async (appartmentId: string) => {
+  return await (
+    await fetch(
+      `http://localhost:5039/api/application/byappartmentid?appartmentId=${appartmentId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-cache",
+      }
+    )
   ).json();
 };

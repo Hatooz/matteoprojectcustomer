@@ -1,7 +1,16 @@
 "use client";
-export default function PrimaryButton({ text }: { text: string }) {
+export default function PrimaryButton({
+  text,
+  callback,
+}: {
+  text: string;
+  callback?: () => void;
+}) {
   return (
-    <button className="bg-red-600 text-lg text-white rounded-lg mt-4">
+    <button
+      onClick={callback}
+      className="bg-red-600 text-lg text-white rounded-lg mt-4 px-2"
+    >
       {text}
     </button>
   );

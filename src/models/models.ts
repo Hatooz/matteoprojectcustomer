@@ -91,6 +91,7 @@ export interface AppartmentDTO {
   /** @format uuid */
   propertyId: string;
   advert?: AdvertDTO;
+  totalApplications?: number;
 }
 
 export interface AppartmentListDTO {

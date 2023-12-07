@@ -5,7 +5,7 @@ export default function Toggle({
 }: {
   label: string;
   value: string;
-  callback: (e: any) => void;
+  callback?: (e: any) => void;
 }) {
   return (
     <label className="relative inline-flex items-center cursor-pointer">

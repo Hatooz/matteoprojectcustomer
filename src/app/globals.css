@@ -28,7 +28,7 @@ body {
 }
 
 .appartment-details > div:nth-child(odd) {
-  @apply text-lg   font-semibold;
+  @apply text-lg font-semibold underline;
 }
 .appartment-details > div:nth-child(even) {
   @apply mb-4;
