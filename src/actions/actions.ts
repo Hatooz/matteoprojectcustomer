@@ -2,7 +2,7 @@
 
 export const getAllProperties = async () => {
   return await (
-    await fetch("http://localhost:5039/api/property", {
+    await fetch(`${process.env.BASE_URL}/api/property`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -12,7 +12,7 @@ export const getAllProperties = async () => {
 };
 export const getAllRules = async () => {
   return await (
-    await fetch("http://localhost:5039/api/queuerule", {
+    await fetch(`${process.env.BASE_URL}/api/queuerule`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -23,7 +23,7 @@ export const getAllRules = async () => {
 
 export const getAppartmentByProperty = async (propertyId: string) => {
   const propResponse = await fetch(
-    `http://localhost:5039/api/appartment/byproperty/${propertyId}`,
+    `${process.env.BASE_URL}/api/appartment/byproperty/${propertyId}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export const getAppartmentByProperty = async (propertyId: string) => {
 
 export const getAppartmentById = async (appartmentId: string) => {
   const appartmentResponse = await fetch(
-    `http://localhost:5039/api/appartment/${appartmentId}`,
+    `${process.env.BASE_URL}/api/appartment/${appartmentId}`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -51,7 +51,7 @@ export const getAppartmentById = async (appartmentId: string) => {
 
 export const getAppartmentsWithAdvert = async () => {
   const appartmentResponse = await fetch(
-    `http://localhost:5039/api/appartment/hasadvert`,
+    `${process.env.BASE_URL}/api/appartment/hasadvert`,
     {
       headers: {
         "Content-Type": "application/json",
@@ -68,7 +68,7 @@ export const updatePropertyRule = async (
   ruleId: string
 ) => {
   console.log("updating property rule");
-  await fetch(`http://localhost:5039/api/property/${propertyId}`, {
+  await fetch(`${process.env.BASE_URL}/api/property/${propertyId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -86,7 +86,7 @@ export const updateAppartmentRule = async (
   propId: string
 ) => {
   console.log("updating property rule");
-  await fetch(`http://localhost:5039/api/appartment/${appartmentId}`, {
+  await fetch(`${process.env.BASE_URL}/api/appartment/${appartmentId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export const addAdvert = async (
   advertText: string,
   rentalDate?: string
 ) => {
-  await fetch(`http://localhost:5039/api/advert`, {
+  await fetch(`${process.env.BASE_URL}/api/advert`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -117,7 +117,7 @@ export const updateAdvert = async (
   advertText: string,
   rentalDate?: string
 ) => {
-  await fetch(`http://localhost:5039/api/advert/${advertId}`, {
+  await fetch(`${process.env.BASE_URL}/api/advert/${advertId}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -128,7 +128,7 @@ export const updateAdvert = async (
 };
 
 export const deleteAdvert = async (advertId: string) => {
-  await fetch(`http://localhost:5039/api/advert/${advertId}`, {
+  await fetch(`${process.env.BASE_URL}/api/advert/${advertId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -168,7 +168,7 @@ export const searchPropertiesWithFilters = async (
   }
 
   return await (
-    await fetch(`http://localhost:5039/api/search?${queryString}`, {
+    await fetch(`${process.env.BASE_URL}/api/search?${queryString}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -208,19 +208,22 @@ export const searchAppartmentstWithFilters = async (
   }
 
   return await (
-    await fetch(`http://localhost:5039/api/search/appartments?${queryString}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-cache",
-    })
+    await fetch(
+      `${process.env.BASE_URL}/api/search/appartments?${queryString}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-cache",
+      }
+    )
   ).json();
 };
 
 export const registerUser = async (email: string, password: string) => {
   return await (
-    await fetch(`http://localhost:5039/api/user`, {
+    await fetch(`${process.env.BASE_URL}/api/user`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -233,7 +236,7 @@ export const registerUser = async (email: string, password: string) => {
 
 export const getUser = async (email: string) => {
   return await (
-    await fetch(`http://localhost:5039/api/user/${email}`, {
+    await fetch(`${process.env.BASE_URL}/api/user/${email}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -248,7 +251,7 @@ export const applyToAppartment = async (
   appartmentId: string
 ) => {
   return await (
-    await fetch(`http://localhost:5039/api/application`, {
+    await fetch(`${process.env.BASE_URL}/api/application`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -262,7 +265,7 @@ export const applyToAppartment = async (
 export const getApplicationsByAppartmentId = async (appartmentId: string) => {
   return await (
     await fetch(
-      `http://localhost:5039/api/application/byappartmentid?appartmentId=${appartmentId}`,
+      `${process.env.BASE_URL}/api/application/byappartmentid?appartmentId=${appartmentId}`,
       {
         method: "GET",
         headers: {

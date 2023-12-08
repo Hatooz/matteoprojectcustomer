@@ -18,7 +18,7 @@ const authOptions: NextAuthOptions = {
       },
       async authorize(credentials, req) {
         const response = await fetch(
-          `http://localhost:5039/api/user/${credentials?.email}`,
+          `${process.env.BASE_URL}/api/user/${credentials?.email}`,
           {
             method: "GET",
             headers: {
