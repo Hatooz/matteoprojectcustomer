@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       BASE_URL: ${{ secrets.BASE_URL }}
+      NEXTAUTH_URL: ${{ secrets.BASE_URL }}
+      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
     steps:
       - uses: actions/checkout@v4
 
@@ -26,6 +28,8 @@ jobs:
         run: |
           touch .env
           echo BASE_URL=$BASE_URL >> .env
+          echo NEXTAUTH_URL=$NEXTAUTH_URL >> .env
+          echo NEXTAUTH_SECRET=$NEXTAUTH_SECRET >> .env
 
       - name: npm install, build, and test
         run: |
@@ -35,8 +39,6 @@ jobs:
 
       - name: Zip artifact for deployment
         run: zip next.zip ./* .next .env -qr
-
-   
 
       - name: "Deploy to Azure Web App"
         id: deploy-to-webapp
